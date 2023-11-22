@@ -50,6 +50,7 @@ class UserSerializer(ModelSerializer):
             raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
         return data
     
+    
 class LoginSerializer(Serializer):
     '''
     로그인 Serializer

@@ -82,11 +82,29 @@ class UserViewSet(ModelViewSet):
         user = User.objects.get(pk=pk)
         serializer = UserUpdateSerializer(user, data=request.data, partial=True)
 
+        # 본인 확인
+        if request.user != user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def retrieve(self, request, pk=None):
+        '''
+        회원 정보를 조회(GET) view 함수
+        '''
+        user = User.objects.get(pk=pk)
+        data = {
+            'email': user.email,
+            'username': user.username,
+        }
+        if user.profile_image:
+            data['profile_image'] = user.profile_image
+
+        return Response(data)
 
 
 signup = UserCreateAPIView.as_view()

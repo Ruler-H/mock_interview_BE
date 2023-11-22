@@ -205,14 +205,16 @@ class TestAccount(TestCase):
         response = self.client.post(
             '/account/login/', 
             {'email': 'test@gmail.com', 'password': 'testtest1@'})
-        
         access_token = response.data['access']
         
-        response = self.client.get('/account/user/1/', HTTP_AUTHORIZATION=f'Beadrer {access_token}')
-        username = response.data['username']
-        email = response.data['email']
-
+        response = self.client.get(
+            '/account/user/1/', 
+            HTTP_AUTHORIZATION=f'Bearer {access_token}')
         self.assertEqual(response.status_code, 200)
+        
+        email = response.data['email']
+        username = response.data['username']
+
         self.assertEqual(username, 'test')
         self.assertEqual(email, 'test@gmail.com')
         print('-- 회원 프로필 조회 테스트 END --')
@@ -230,8 +232,8 @@ class TestAccount(TestCase):
         response = self.client.post(
             '/account/login/', 
             {'email': 'test@gmail.com', 'password': 'testtest1@'})
-        
         access_token = response.data['access']
+
         response = self.client.put(
             '/account/user/1/', 
             data={'email': 'test1@gmail.com', 'username': 'test1'}, 
