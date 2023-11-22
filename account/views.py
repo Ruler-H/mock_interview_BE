@@ -10,7 +10,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate
 
-from .serializers import UserSerializer, LoginSerializer
+from .serializers import UserSerializer, LoginSerializer, UserUpdateSerializer
 from .models import User
 
 class UserCreateAPIView(CreateAPIView):
@@ -63,7 +63,7 @@ class UserViewSet(ModelViewSet):
 
     def destroy(self, request, pk=None):
         '''
-        회원 탈퇴 처리 함수
+        회원 탈퇴(DELETE) view 함수
         '''
         user = User.objects.get(pk=pk)
 
@@ -74,6 +74,19 @@ class UserViewSet(ModelViewSet):
         # 회원 탈퇴
         user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    def update(self, request, pk=None):
+        '''
+        회원 정보 수정(PUT) view 함수
+        '''
+        user = User.objects.get(pk=pk)
+        serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 signup = UserCreateAPIView.as_view()

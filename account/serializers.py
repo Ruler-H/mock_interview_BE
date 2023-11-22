@@ -78,3 +78,28 @@ class LoginSerializer(Serializer):
             raise serializers.ValidationError('이메일과 비밀번호를 모두 입력하셔야 합니다.')
 
 
+class UserUpdateSerializer(ModelSerializer):
+    '''
+    사용자 Update Serializer
+    '''
+    class Meta:
+        model = User
+        fields = ['email', 'username', 'profile_image']
+        extra_kwargs = {
+            'password':{'write_only': True}
+        }
+    
+    def update(self, instance, validated_data):
+        '''
+        사용자 회원 정보 수정 serializer 함수
+        '''
+        instance.username = validated_data.get('username', instance.username)
+        instance.email = validated_data.get('email', instance.email)
+
+        if 'profile_image' in validated_data:
+            profile_image = validated_data.pop('profile_image')
+            instance.profile_image.save(profile_image.name, profile_image)
+
+        instance.save()
+
+        return instance

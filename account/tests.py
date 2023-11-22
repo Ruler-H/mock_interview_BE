@@ -221,6 +221,7 @@ class TestAccount(TestCase):
         '''
         회원 프로필 수정 테스트
         '''
+        print('-- 회원 프로필 수정 테스트 BEGIN --')
         self.client.post(
             '/account/signup/', 
             {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
@@ -231,11 +232,16 @@ class TestAccount(TestCase):
             {'email': 'test@gmail.com', 'password': 'testtest1@'})
         
         access_token = response.data['access']
-        
-        response = self.client.put('/account/user/1/', data={'email': 'test1@gmail.com', 'username': 'test1'}, HTTP_AUTHORIZATION=f'Beadrer {access_token}')
-        username = response.data['username']
-        email = response.data['email']
+        response = self.client.put(
+            '/account/user/1/', 
+            data={'email': 'test1@gmail.com', 'username': 'test1'}, 
+            format='multipart', 
+            HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        user = User.objects.get(pk=1)
+        username = user.username
+        email = user.email
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(username, 'test1')
         self.assertEqual(email, 'test1@gmail.com')
+        print('-- 회원 프로필 수정 테스트 END --')

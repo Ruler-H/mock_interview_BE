@@ -10,6 +10,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     username = models.CharField(max_length=100, unique=True)
+    profile_image = models.ImageField(upload_to='user/images/%Y/%m/%d/', blank=True)
 
     objects = CustomUserManager()
 
