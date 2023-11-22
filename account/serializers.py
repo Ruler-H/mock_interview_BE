@@ -1,6 +1,8 @@
-from .models import User
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
+from django.contrib.auth import authenticate
+
+from .models import User
 
 class UserSerializer(ModelSerializer):
     '''
@@ -47,3 +49,32 @@ class UserSerializer(ModelSerializer):
         if password != password2:
             raise serializers.ValidationError("비밀번호가 일치하지 않습니다.")
         return data
+    
+class LoginSerializer(Serializer):
+    '''
+    로그인 Serializer
+    '''
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        '''
+        로그인 유효성 검사 함수
+            - 이메일 입력 여부
+            - 비밀번호 입력 여부
+            - 이메일, 비밀번호 일치 여부
+        '''
+        email = data.get('email')
+        password = data.get('password')
+
+        if email and password:
+            user = authenticate(request=self.context.get('request'),
+                                email=email, password=password)
+            if user:
+                return data
+            else:
+                raise serializers.ValidationError('이메일 혹은 비밀번호가 틀립니다.')
+        else:
+            raise serializers.ValidationError('이메일과 비밀번호를 모두 입력하셔야 합니다.')
+
+

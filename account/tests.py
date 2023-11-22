@@ -54,3 +54,48 @@ class TestAccount(TestCase):
         self.assertEqual(User.objects.get(id=1).username, 'test')
 
         print('-- 회원가입 테스트 END --')
+
+    def test_account_login(self):
+        '''
+        로그인 테스트
+        '''
+        print('-- 로그인 테스트 BEGIN --')
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        
+        # 로그인 실패 테스트 - 비밀번호를 틀린 경우
+        response = self.client.post(
+            '/account/login/',
+            {'email': 'test@gmail.com', 'password':'testtest2!'},
+            format='json'
+        )
+        self.assertIn(response.status_code, [400, 401])
+
+        # 로그인 실패 테스트 - 이메일이 없는 경우
+        response = self.client.post(
+            '/account/login/',
+            {'email': '', 'password':'testtest2!'},
+            format='json'
+        )
+        self.assertIn(response.status_code, [400, 401])
+
+        # 로그인 실패 테스트 - 비밀번호가 없는 경우
+        response = self.client.post(
+            '/account/login/',
+            {'email': 'test@gmail.com', 'password':'testtest2!'},
+            format='json'
+        )
+        self.assertIn(response.status_code, [400, 401])
+
+        # 로그인 성공 테스트
+        response = self.client.post(
+            '/account/login/',
+            {'email': 'test@gmail.com', 'password':'testtest1@'},
+            format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+        logged_in = self.client.login(email='test@gmail.com', password='testtest1@')
+        self.assertTrue(logged_in)
+        print('-- 로그인 테스트 END --')
