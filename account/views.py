@@ -1,14 +1,17 @@
 from datetime import timedelta
 from rest_framework import status
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.contrib.auth import authenticate
 
 from .serializers import UserSerializer, LoginSerializer
+from .models import User
 
 class UserCreateAPIView(CreateAPIView):
     '''
@@ -49,6 +52,28 @@ class LogoutView(APIView):
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except:
             return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserViewSet(ModelViewSet):
+    '''
+    사용자 탈퇴, 프로필, 수정을 처리하는 View
+    '''
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
+
+    def destroy(self, request, pk=None):
+        '''
+        회원 탈퇴 처리 함수
+        '''
+        user = User.objects.get(pk=pk)
+
+        # 본인 확인
+        if request.user != user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # 회원 탈퇴
+        user.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 signup = UserCreateAPIView.as_view()

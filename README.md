@@ -79,7 +79,7 @@
 |signup/|POST|회원가입|||
 |login/|POST|로그인|||
 |logout/|POST|로그아웃|✅||
-|\<int:pk\>/|POST|프로필 조회|✅||
+|\<int:pk\>/|GET|프로필 조회|✅||
 |\<int:pk\>/|PUT|프로필 수정|✅|✅|
 |\<int:pk\>/|DELETE|회원 탈퇴|✅|✅|
 <br>  

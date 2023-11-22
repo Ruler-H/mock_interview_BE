@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from django.test import TestCase
-from django.contrib.auth.models import User
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -161,3 +160,82 @@ class TestAccount(TestCase):
         response = self.client.post('/account/logout/', HTTP_AUTHORIZATION=f'Bearer {token}')
         self.assertEqual(response.status_code, 401)
         print('-- 로그아웃 테스트 END --')
+
+    def test_account_secession(self):
+        '''
+        회원 탈퇴 테스트
+        '''
+        print('-- 회원 탈퇴 테스트 BEGIN --')
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        
+        # 미로그인 사용자가 요청한 경우 401코드 반환
+        response = self.client.delete('/account/user/1/')
+        self.assertEqual(response.status_code, 401)
+
+        # 다른 사용자가 요청한 경우 403코드 반환
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test1@gmail.com', 'username': 'test1', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        response = self.client.post('/account/login/', {'email': 'test1@gmail.com', 'password': 'testtest1@'})
+        access_token = response.data['access']
+        response = self.client.delete('/account/user/1/', HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        self.assertEqual(response.status_code, 403)
+
+        # 권한 있는 사용자가 요청한 경우 205코드 반환
+        response = self.client.post('/account/login/', {'email': 'test@gmail.com', 'password': 'testtest1@'})
+        access_token = response.data['access']
+        response = self.client.delete('/account/user/1/', HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        self.assertEqual(response.status_code, 204)
+        print('-- 회원 탈퇴 테스트 END --')
+
+    def test_account_profile_get(self):
+        '''
+        회원 프로필 조회 테스트
+        '''
+        print('-- 회원 프로필 조회 테스트 BEGIN --')
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        
+        response = self.client.post(
+            '/account/login/', 
+            {'email': 'test@gmail.com', 'password': 'testtest1@'})
+        
+        access_token = response.data['access']
+        
+        response = self.client.get('/account/user/1/', HTTP_AUTHORIZATION=f'Beadrer {access_token}')
+        username = response.data['username']
+        email = response.data['email']
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(username, 'test')
+        self.assertEqual(email, 'test@gmail.com')
+        print('-- 회원 프로필 조회 테스트 END --')
+
+    def test_account_profile_put(self):
+        '''
+        회원 프로필 수정 테스트
+        '''
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        
+        response = self.client.post(
+            '/account/login/', 
+            {'email': 'test@gmail.com', 'password': 'testtest1@'})
+        
+        access_token = response.data['access']
+        
+        response = self.client.put('/account/user/1/', data={'email': 'test1@gmail.com', 'username': 'test1'}, HTTP_AUTHORIZATION=f'Beadrer {access_token}')
+        username = response.data['username']
+        email = response.data['email']
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(username, 'test1')
+        self.assertEqual(email, 'test1@gmail.com')
