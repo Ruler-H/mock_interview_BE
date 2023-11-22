@@ -1,10 +1,8 @@
-from datetime import datetime, timedelta, timezone
-from unittest.mock import patch
+from datetime import datetime, timedelta
 from django.test import TestCase
 from django.contrib.auth.models import User
 from rest_framework.test import APIClient
-from rest_framework_simplejwt.tokens import RefreshToken, Token
-from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 
@@ -142,16 +140,24 @@ class TestAccount(TestCase):
 
         print('-- JWT token 만료 테스트 END --')
 
-    # def test_account_logout(self):
-    #     '''
-    #     로그아웃 테스트
-    #     '''
-    #     print('-- 로그아웃 테스트 BEGIN --')
-    #     self.client.post(
-    #         '/account/login/',
-    #         {'email': 'test@gmail.com', 'password':'testtest1@'},
-    #         format='json'
-    #     )
-    #     response = self.client.get('/account/logout/')
-    #     self.assertEqual(response.status_code, 200)
-    #     print('-- 로그아웃 테스트 END --')
+    def test_account_logout(self):
+        '''
+        로그아웃 테스트
+        '''
+        print('-- 로그아웃 테스트 BEGIN --')
+        self.client.post(
+            '/account/signup/', 
+            {'email': 'test@gmail.com', 'username': 'test', 'password': 'testtest1@', 'password2': 'testtest1@'}, 
+            format='json')
+        response = self.client.post('/account/login/', {'email': 'test@gmail.com', 'password': 'testtest1@'})
+        self.assertEqual(response.status_code, 200)
+        token = response.data['refresh']
+
+        # 로그아웃 요청
+        response = self.client.post('/account/logout/', {'refresh': token})
+        self.assertEqual(response.status_code, 205)
+
+        # 로그아웃 후 토큰 사용 시도
+        response = self.client.post('/account/logout/', HTTP_AUTHORIZATION=f'Bearer {token}')
+        self.assertEqual(response.status_code, 401)
+        print('-- 로그아웃 테스트 END --')

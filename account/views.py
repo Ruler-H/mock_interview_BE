@@ -1,3 +1,4 @@
+from datetime import timedelta
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -5,8 +6,7 @@ from rest_framework.generics import CreateAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.tokens import RefreshToken
-from django.http import HttpRequest
-from django.contrib.auth import logout, authenticate
+from django.contrib.auth import authenticate
 
 from .serializers import UserSerializer, LoginSerializer
 
@@ -42,13 +42,13 @@ class LogoutView(APIView):
     '''
     로그아웃 APIView
     '''
-    permission_classes = [IsAuthenticated]
-    def get(self, request):
-        http_request = HttpRequest()
-        http_request.session = request.session
-        http_request.method = request.method
-        logout(http_request)
-        return Response({"detail": "로그아웃이 완료되었습니다."}, status=status.HTTP_200_OK)
+    def post(self, request):
+        try:
+            refresh_token = RefreshToken(request.data["refresh"])
+            refresh_token.set_exp(timedelta(days=1))
+            return Response(status=status.HTTP_205_RESET_CONTENT)
+        except:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
 signup = UserCreateAPIView.as_view()
