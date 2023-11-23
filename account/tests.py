@@ -185,7 +185,7 @@ class TestAccount(TestCase):
         response = self.client.delete('/account/user/1/', HTTP_AUTHORIZATION=f'Bearer {access_token}')
         self.assertEqual(response.status_code, 403)
 
-        # 권한 있는 사용자가 요청한 경우 205코드 반환
+        # 권한 있는 사용자가 요청한 경우 204코드 반환
         response = self.client.post('/account/login/', {'email': 'test@gmail.com', 'password': 'testtest1@'})
         access_token = response.data['access']
         response = self.client.delete('/account/user/1/', HTTP_AUTHORIZATION=f'Bearer {access_token}')

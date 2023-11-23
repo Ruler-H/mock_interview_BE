@@ -1,8 +1,7 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
 
-from .models import ChatRoom
-from account.models import User
+from .models import ChatRoom, ChatMessage
 
 class TestChatbot(TestCase):
     def setUp(self):
@@ -76,7 +75,6 @@ class TestChatbot(TestCase):
             HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
             format='json')
         self.assertEqual(response.status_code, 201)
-        print(response.data['answer'])
         self.assertTrue(response.data['answer'])
 
         # 질문 내용이 없을 때 처리
@@ -90,3 +88,53 @@ class TestChatbot(TestCase):
         self.assertEqual(response.status_code, 400)
 
         print('-- 챗봇 답변 테스트 END --')
+
+    def test_chatbot_load(self):
+        '''
+        챗봇 이전 채팅 load 테스트
+        '''
+        print('-- 챗봇 이전 채팅 load 테스트 BEGIN --')
+        self.client.post(
+            '/chatbot/', 
+            data={'client':1},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '프론트엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        response = self.client.get(
+            '/chatbot/1/messages/',
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 4)
+        print('-- 챗봇 이전 채팅 load 테스트 END --')
+
+    def test_chatbot_delete(self):
+        '''
+        채팅방 delete 테스트
+        '''
+        print('-- 채팅방 delete 테스트 BEGIN --')
+        self.client.post(
+            '/chatbot/', 
+            data={'client':1},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        response = self.client.delete(
+            '/chatbot/1',
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}'
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(ChatRoom.objects.all().count(), 0)
+        print('-- 채팅방 delete 테스트 END --')

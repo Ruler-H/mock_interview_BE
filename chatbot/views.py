@@ -2,6 +2,7 @@ import requests
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
@@ -62,6 +63,20 @@ class ChatAnswerView(APIView):
         return Response(data={'answer':answer}, status=status.HTTP_201_CREATED)
 
 
+class ChatMessageListView(ListAPIView):
+    serializer_class = ChatMessageSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, OnlyOwer]
+    queryset = ChatMessage.objects.all()
+    
+    def get_queryset(self):
+        pk = self.kwargs['pk']
+        queryset = self.queryset.filter(chat_room__id=pk)
+        print(queryset)
+        return queryset
+
+
 chat_create = ChatCreateView.as_view()
 chat_list = ChatListView.as_view()
 chat_answer = ChatAnswerView.as_view()
+chat_messages = ChatMessageListView.as_view()
