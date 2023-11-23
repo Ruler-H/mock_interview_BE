@@ -96,7 +96,7 @@
 |app:chatbot|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
 |:-|:-|:-|:-:|:-:|
 |/|POST|채팅방 생성|✅||
-|/list/|POST|채팅방 리스트|✅|✅|
+|/list/|GET|채팅방 리스트|✅|✅|
 |/\<int:pk\>/|POST|이전 채팅 내용 요청|✅|✅|
 |/\<int:pk\>/|DELETE|채팅방 삭제|✅|✅|
 |/\<int:pk\>/answer/|POST|답변 요청|✅|✅|
@@ -152,7 +152,8 @@ class UserSerializer(ModelSerializer):
         return user
 ```
 - 해당 문제는 create 함수 코드 중 user를 생성하는 코드를 validated_data를 한꺼번에 집어넣는 것이 아닌 필드별로 값을 주어 user를 생성하는 방법으로 코드를 수정하여 해결하였습니다.
-
+### 10-2. 채팅방 생성 테스트 시 원인 불명의 400에러가 발생
+#### 10-2-1. 문제 원인
 ```shell
 ======================================================================
 FAIL: test_chatbot_create (chatbot.tests.TestChatbot.test_chatbot_create)
@@ -165,6 +166,25 @@ AssertionError: 400 != 201
 
 ----------------------------------------------------------------------
 ```
+- 해당 문제는 로그인한 사용자만 접근이 가능하도록 개발한 채팅방 생성 기능을 테스트하는 중 발생한 문제입니다.
+- 문제의 원인은 ChatRoom 모델 생성 시 외래키로 설정해두었던 사용자 모델을 위한 데이터 값을 요청 시 함께 보내지 않은 것이었습니다.
+#### 10-2-2. 해결 방법
+- 문제 해결을 위해서 아래 코드와 같이 데이터 값에 사용자의 pk값을 넘김으로 문제를 해결할 수 있었습니다.
+```python
+# 수정 전 코드
+response = self.client.post(
+    '/chatbot/', 
+    HTTP_AUTHORIZATION=f'Bearer {self.access_token}', 
+    format='json')
+
+# 수정 후 코드
+response = self.client.post(
+    '/chatbot/', 
+    data={'client':1},
+    HTTP_AUTHORIZATION=f'Bearer {self.access_token}', 
+    format='json')
+```
+- 이 문제를 해결하며 DRF에서 외래키로 설정하게 되면 데이터를 입력받을 때 대상 외래키 테이블의 pk 값을 넘겨주게 되면 데이터 저장 시 자동으로 해당 pk의 대상 인스턴스 값을 저장한다는 사실을 알 수 있었습니다.
 
 ## 11. 개발 회고
 추가 필요

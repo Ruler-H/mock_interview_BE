@@ -41,3 +41,20 @@ class TestChatbot(TestCase):
 
         self.assertEqual(ChatRoom.objects.all().count(), 1)
         print('-- 챗봇 생성 테스트 END --')
+
+    def test_chatbot_list(self):
+        '''
+        채팅방 목록 테스트
+        '''
+        print('-- 채팅방 목록 테스트 BEGIN --')
+        for i in range(5):
+            response = self.client.post(
+                '/chatbot/', 
+                data={'client':1},
+                HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+                format='json')
+        
+        response = self.client.get('/chatbot/list/', HTTP_AUTHORIZATION=f'Bearer {self.access_token}')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.data), 5)
+        print('-- 채팅방 목록 테스트 END --')

@@ -1,12 +1,18 @@
 from django.db import models
 
 class ChatRoom(models.Model):
+    '''
+    채팅방 모델
+    '''
     client = models.ForeignKey(
         'account.User', 
         on_delete=models.CASCADE
     )
     
 class ChatMessage(models.Model):
+    '''
+    채팅 메시지 모델
+    '''
     chat_room = models.ForeignKey(
         'chatbot.ChatRoom',
         on_delete=models.CASCADE

@@ -2,9 +2,9 @@ from rest_framework.serializers import ModelSerializer
 
 from .models import ChatRoom
 
-class ChatCreateSerializer(ModelSerializer):
+class ChatRoomSerializer(ModelSerializer):
     '''
-    Chat 생성 Serializer
+    Chat Serializer
     '''
     class Meta:
         model = ChatRoom
