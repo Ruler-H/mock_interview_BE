@@ -97,7 +97,7 @@
 |:-|:-|:-|:-:|:-:|
 |/|POST|채팅방 생성|✅||
 |/list/|GET|채팅방 리스트|✅|✅|
-|/\<int:pk\>/messages/|POST|이전 채팅 내용 요청|✅|✅|
+|/\<int:pk\>/messages/|GET|이전 채팅 내용 요청|✅|✅|
 |/\<int:pk\>/|DELETE|채팅방 삭제|✅|✅|
 |/answer/|POST|답변 요청|✅|✅|
 

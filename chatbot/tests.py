@@ -132,7 +132,7 @@ class TestChatbot(TestCase):
             HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
             format='json')
         response = self.client.delete(
-            '/chatbot/1',
+            '/chatbot/1/',
             HTTP_AUTHORIZATION=f'Bearer {self.access_token}'
         )
         self.assertEqual(response.status_code, 204)

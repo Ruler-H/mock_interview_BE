@@ -2,9 +2,8 @@ import requests
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.generics import CreateAPIView, ListAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView, DestroyAPIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .utils import generate_text
@@ -76,7 +75,16 @@ class ChatMessageListView(ListAPIView):
         return queryset
 
 
+class ChatDeleteView(DestroyAPIView):
+    serializer_class = ChatRoomSerializer
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, OnlyOwer]
+    queryset = ChatRoom.objects.all()
+    lookup_field = 'pk'
+
+
 chat_create = ChatCreateView.as_view()
 chat_list = ChatListView.as_view()
 chat_answer = ChatAnswerView.as_view()
 chat_messages = ChatMessageListView.as_view()
+chat_delete = ChatDeleteView.as_view()
