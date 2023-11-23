@@ -95,7 +95,8 @@
 
 |app:chatbot|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
 |:-|:-|:-|:-:|:-:|
-|/|POST|채팅방 리스트|✅|✅|
+|/|POST|채팅방 생성|✅||
+|/list/|POST|채팅방 리스트|✅|✅|
 |/\<int:pk\>/|POST|이전 채팅 내용 요청|✅|✅|
 |/\<int:pk\>/|DELETE|채팅방 삭제|✅|✅|
 |/\<int:pk\>/answer/|POST|답변 요청|✅|✅|
@@ -151,6 +152,19 @@ class UserSerializer(ModelSerializer):
         return user
 ```
 - 해당 문제는 create 함수 코드 중 user를 생성하는 코드를 validated_data를 한꺼번에 집어넣는 것이 아닌 필드별로 값을 주어 user를 생성하는 방법으로 코드를 수정하여 해결하였습니다.
+
+```shell
+======================================================================
+FAIL: test_chatbot_create (chatbot.tests.TestChatbot.test_chatbot_create)
+챗봇 생성 테스트
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\mockinterview\mock_interview_BE\chatbot\tests.py", line 33, in test_chatbot_create
+    self.assertEqual(response.status_code, 201)
+AssertionError: 400 != 201
+
+----------------------------------------------------------------------
+```
 
 ## 11. 개발 회고
 추가 필요
