@@ -18,5 +18,7 @@ class ChatMessage(models.Model):
         on_delete=models.CASCADE
     )
     content = models.TextField()
+    # 0: client
+    # 1: chatbot
     sender = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)

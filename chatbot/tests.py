@@ -22,11 +22,9 @@ class TestChatbot(TestCase):
         챗봇 생성 테스트
         '''
         print('-- 챗봇 생성 테스트 BEGIN --')
-        user = User.objects.get(pk=1)
-
         # 권한 없이 요청하는 경우 401
         response = self.client.post(
-            '/chatbot/',)
+            '/chatbot/')
         self.assertEqual(response.status_code, 401)
 
         # 권한이 있는 사용자가 요청하는 경우 201
@@ -58,3 +56,37 @@ class TestChatbot(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.data), 5)
         print('-- 채팅방 목록 테스트 END --')
+
+    def test_chatbot_answer(self):
+        '''
+        챗봇 답변 테스트
+        '''
+        print('-- 챗봇 답변 테스트 BEGIN --')
+        # 정상 처리
+        self.client.post(
+            '/chatbot/', 
+            data={'client':1},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        response = self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.assertEqual(response.status_code, 201)
+        print(response.data['answer'])
+        self.assertTrue(response.data['answer'])
+
+        # 질문 내용이 없을 때 처리
+        response = self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.assertEqual(response.status_code, 400)
+
+        print('-- 챗봇 답변 테스트 END --')
