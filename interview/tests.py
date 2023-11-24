@@ -114,3 +114,20 @@ class TestInterview(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(Favorite.objects.all().count(), 0)
         print('-- 즐겨찾기 삭제 기능 테스트 END --')
+
+    def test_interview_field_question(self):
+        '''
+        분야별 질문 요청 기능 테스트
+        '''
+        print('-- 분야별 질문 요청 기능 테스트 BEGIN --')
+        response = self.client.post(
+            '/interview/field_question/',
+            data={
+                'field':'BE',
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(len(response.data['question_list']), 2)
+        print('-- 분야별 질문 요청 기능 테스트 END --')

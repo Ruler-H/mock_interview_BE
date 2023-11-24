@@ -20,7 +20,7 @@ def question(request):
     field = request.data['field']
     data = f'system: assistant는 {career} {field} 기술 면접 전문가이다.'
     data += f'\nuser: {career} {field} 기술 면접 예시 질문을 질문, 모범 답변, 질문 의도, 질문 난이도로 정리해서 한글로 답해줘. 질문 난이도는 상, 중, 하로 답변해주고, 오직 json 형태로만 응답주고, key 값으로는 question, answer, intent, difficulty로 응답해줘.'
-    question_list = generate_question(data)
+    question_list = generate_question(data, 10)
     
     return Response(data={'question_list':question_list}, status=status.HTTP_201_CREATED)
 
@@ -92,3 +92,17 @@ class FavoriteViewSet(ModelViewSet):
         # 즐겨찾기 삭제
         favorite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def field_question(request):
+    '''
+    모의 면접을 위한 문제 요청(POST) view 함수
+    '''
+    field = request.data['field']
+    data = f'system: assistant는 {field} 기술 면접 전문가이다.'
+    data += f'\nuser: {field} 기술 면접 예시 질문을 질문, 모범 답변, 질문 의도, 질문 난이도로 정리해서 한글로 답해줘. 질문 난이도는 상, 중, 하로 답변해주고, 오직 json 형태로만 응답주고, key 값으로는 question, answer, intent, difficulty로 응답해줘.'
+    question_list = generate_question(data, 2)
+    return Response(data={'question_list':question_list}, status=status.HTTP_201_CREATED)

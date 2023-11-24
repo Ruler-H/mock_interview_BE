@@ -20,10 +20,10 @@ def generate_text(prompt):
     )
     return response.choices
 
-def generate_question(data):
+def generate_question(data, cnt):
     responses = generate_text(data)
     question_list = []
-    for response in responses:
+    for response in responses[:cnt]:
         question = dict()
         for line in response.text.strip().split('\n'):
             if 'question' in line:

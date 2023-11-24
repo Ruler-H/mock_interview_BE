@@ -13,4 +13,5 @@ urlpatterns = [
     path('grading/', views.grading, name='grading'),
     path('total_grading/', views.total_grading, name='total_grading'),
     path('', include(router.urls)),
+    path('field_question/', views.field_question, name='field_quetion'),
 ]
