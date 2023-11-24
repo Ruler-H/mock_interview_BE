@@ -91,15 +91,17 @@
 |total_grading/|POST|모의 면접 전체 채점|✅||
 |favorite/|POST|즐겨찾기 추가|✅||
 |favorite/\<int:pk\>/|DELETE|즐겨찾기 삭제|✅|✅|
+|question/be/|POST|백엔드 분야 예상 문제 요청|✅|✅|
+|question/fe/|POST|프론트 분야 예상 문제 요청|✅|✅|
 <br>
 
 |app:chatbot|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
 |:-|:-|:-|:-:|:-:|
-|/|POST|채팅방 생성|✅||
-|/list/|GET|채팅방 리스트|✅|✅|
-|/\<int:pk\>/messages/|GET|이전 채팅 내용 요청|✅|✅|
-|/\<int:pk\>/|DELETE|채팅방 삭제|✅|✅|
-|/answer/|POST|답변 요청|✅|✅|
+||POST|채팅방 생성|✅||
+|list/|GET|채팅방 리스트|✅|✅|
+|\<int:pk\>/messages/|GET|이전 채팅 내용 요청|✅|✅|
+|\<int:pk\>/|DELETE|채팅방 삭제|✅|✅|
+|answer/|POST|답변 요청|✅|✅|
 
 ## 7. 프로젝트 구조
 추가 필요
