@@ -89,3 +89,28 @@ class TestInterview(TestCase):
         self.assertEqual(response.status_code, 201)
         self.assertEqual(Favorite.objects.all().count(), 1)
         print('-- 즐겨찾기 추가 기능 테스트 END --')
+
+    def test_interview_favorite_delete(self):
+        '''
+        즐겨찾기 삭제 기능 테스트
+        '''
+        print('-- 즐겨찾기 삭제 기능 테스트 BEGIN --')
+        self.client.post(
+            '/interview/favorite/',
+            data={
+                'grade':'하',
+                'field':'BE',
+                'question':'HTTP 프로토콜 메시지의 구조는 무엇이고 어떤 용도로 사용됩니까?',
+                'intent':'HTTP에 대한 이해',
+                'model_answer':'HTTP 프로토콜 메시지는 헤더 및 바디 두 가지 요소로 구성되어 있습니다. 헤더는 요청과 응답의 정보를 포함하고 있고 바디는 요청 또는 응답과 관련한 데이터를 포함하고 있습니다. HTTP 프로토콜은 웹 서버와 클라이언트 사이의 요청과 응답의 정보를 주고 받기 위해 사용됩니다.'
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        response = self.client.delete(
+            '/interview/favorite/1/',
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+        )
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Favorite.objects.all().count(), 0)
+        print('-- 즐겨찾기 삭제 기능 테스트 END --')

@@ -67,6 +67,9 @@ class FavoriteViewSet(ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def create(self, request):
+        '''
+        즐겨찾기 추가 함수
+        '''
         request.data['user'] = request.user.pk
         serializer = FavoriteSerializer(data=request.data)
         
@@ -75,3 +78,17 @@ class FavoriteViewSet(ModelViewSet):
             return Response(status=status.HTTP_201_CREATED)
         print(serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def destroy(self, request, pk=None):
+        '''
+        즐겨찾기 삭제 함수
+        '''
+        favorite = Favorite.objects.get(pk=pk)
+
+        # 본인 확인
+        if request.user != favorite.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        # 즐겨찾기 삭제
+        favorite.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
