@@ -36,3 +36,9 @@ def generate_question(data):
                 question['difficulty'] = line.split(':')[-1].replace(',', '').replace('"', '')
         question_list.append(question)
     return question_list
+
+def generate_score(data):
+    responses = generate_text(data)
+    score = responses[0].text.strip().replace('점', '').replace('.', '')
+    score = int(score)
+    return score

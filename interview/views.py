@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.decorators import api_view, permission_classes, authentication_classes
 
-from .utils import generate_text, generate_question
+from .utils import generate_score, generate_question
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
@@ -17,3 +17,15 @@ def question(request):
     question_list = generate_question(data)
     
     return Response(data={'question_list':question_list}, status=status.HTTP_201_CREATED)
+
+@api_view(['POST'])
+@authentication_classes([JWTAuthentication])
+@permission_classes([IsAuthenticated])
+def grading(request):
+    question = request.data['question']
+    answer = request.data['answer']
+    data = f'system: assistant는 developer 기술 면접 전문가이다.'
+    data += f'\nuser: {question}라는 질문에 {answer}라고 답하면 10점 만점에 몇점인지 숫자만 알려줘'
+    score = generate_score(data)
+    print(score)
+    return Response(data={'score':score}, status=status.HTTP_200_OK)
