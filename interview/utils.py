@@ -39,6 +39,16 @@ def generate_question(data):
 
 def generate_score(data):
     responses = generate_text(data)
-    score = responses[0].text.strip().replace('점', '').replace('.', '')
+    score = responses[0].text.strip().replace('점', '').replace('.', '').replace(',', '')
     score = int(score)
     return score
+
+def generate_total_score(data):
+    responses = generate_text(data)
+    response = responses[0].text.split('\n')
+    for line in response:
+        if 'score' in line:
+            score = int(line.split(':')[-1].strip().replace('점', '').replace('.', '').replace(',', ''))
+        elif 'complement' in line:
+            complement = line.split(':')[-1].strip().replace('점', '').replace('.', '').replace(',', '')
+    return score, complement

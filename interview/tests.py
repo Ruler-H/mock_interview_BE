@@ -42,3 +42,27 @@ class TestInterview(TestCase):
         self.assertGreaterEqual(response.data['score'], 0)
         self.assertLessEqual(response.data['score'], 10)
         print('-- 단위 문제 채점 기능 테스트 END --')
+
+    def test_interview_total_grading(self):
+        '''
+        모의 면접 전체 채점 기능 테스트
+        '''
+        print('-- 모의 면접 전체 채점 기능 테스트 BEGIN --')
+        response = self.client.post(
+            '/interview/total_grading/',
+            data={
+                'question_list':[
+                    {'question':'HTTP 프로토콜 메시지의 구조는 무엇이고 어떤 용도로 사용됩니까?',
+                    'answer':'HTTP 프로토콜 메시지는 헤더 및 바디 두 가지 요소로 구성되어 있습니다. 헤더는 요청과 응답의 정보를 포함하고 있고 바디는 요청 또는 응답과 관련한 데이터를 포함하고 있습니다. HTTP 프로토콜은 웹 서버와 클라이언트 사이의 요청과 응답의 정보를 주고 받기 위해 사용됩니다.'},
+                    {'question':'메모리 관리란 무엇인가요?',
+                    'answer':'HTTP 요청과 응답은 각각 헤더 바디 상태 라인 등의 요소로 구성되어 있습니다.'},
+                ]
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertGreaterEqual(response.data['score'], 0)
+        self.assertLessEqual(response.data['score'], 10)
+        self.assertTrue(response.data['complement'])
+        print('-- 모의 면접 전체 채점 기능 테스트 END --')

@@ -6,4 +6,5 @@ app_name = 'interview'
 urlpatterns = [
     path('question/', views.question, name='quetion'),
     path('grading/', views.grading, name='grading'),
+    path('total_grading/', views.total_grading, name='total_grading'),
 ]

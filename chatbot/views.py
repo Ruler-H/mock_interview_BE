@@ -71,7 +71,6 @@ class ChatMessageListView(ListAPIView):
     def get_queryset(self):
         pk = self.kwargs['pk']
         queryset = self.queryset.filter(chat_room__id=pk)
-        print(queryset)
         return queryset
 
 
