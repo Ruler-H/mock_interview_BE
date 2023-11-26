@@ -18,6 +18,9 @@ class UserCreateAPIView(CreateAPIView):
     사용자 생성 APIView
     '''
     serializer_class = UserSerializer
+    def create(self, request, *args, **kwargs):
+        print(request.data)
+        return super().create(request, *args, **kwargs)
 
 
 class LoginView(TokenObtainPairView):
@@ -45,6 +48,8 @@ class LogoutView(APIView):
     '''
     로그아웃 APIView
     '''
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated]
     def post(self, request):
         try:
             refresh_token = RefreshToken(request.data["refresh"])
@@ -101,12 +106,23 @@ class UserViewSet(ModelViewSet):
             'email': user.email,
             'username': user.username,
         }
-        if user.profile_image:
-            data['profile_image'] = user.profile_image
 
         return Response(data)
+    
+class StatusView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = User.objects.get(pk=request.user.pk)
+        data = {
+            'pk': user.pk,
+            'email': user.email,
+            'username': user.username,
+        }
+        return Response(data, status=status.HTTP_200_OK)
 
 
 signup = UserCreateAPIView.as_view()
 login = LoginView.as_view()
 logout = LogoutView.as_view()
+account_status = StatusView.as_view()

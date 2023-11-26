@@ -3,12 +3,14 @@ from rest_framework.serializers import ModelSerializer, Serializer
 from django.contrib.auth import authenticate
 
 from .models import User
+from .validators import validate_file_size
 
 class UserSerializer(ModelSerializer):
     '''
     사용자 Serializer
     '''
     password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+
     class Meta:
         model = User
         fields = ['email', 'username', 'password', 'password2']
@@ -85,7 +87,7 @@ class UserUpdateSerializer(ModelSerializer):
     '''
     class Meta:
         model = User
-        fields = ['email', 'username', 'profile_image']
+        fields = ['email', 'username']
         extra_kwargs = {
             'password':{'write_only': True}
         }
@@ -96,10 +98,6 @@ class UserUpdateSerializer(ModelSerializer):
         '''
         instance.username = validated_data.get('username', instance.username)
         instance.email = validated_data.get('email', instance.email)
-
-        if 'profile_image' in validated_data:
-            profile_image = validated_data.pop('profile_image')
-            instance.profile_image.save(profile_image.name, profile_image)
 
         instance.save()
 

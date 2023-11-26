@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from django.test import TestCase
+from django.core.files.uploadedfile import SimpleUploadedFile
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -18,10 +19,11 @@ class TestAccount(TestCase):
             - 확인 비밀번호와 일치
         '''
         print('-- 회원가입 테스트 BEGIN --')
+        
         # 비밀번호 유효성 테스트 - 8글자 이상
         response = self.client.post(
             '/account/signup/', 
-            {'email': 'elwl5515@gmail.com', 'username': 'hwang', 'password': 'test1@', 'password2': 'test1@'}, 
+            {'email': 'elwl5515@gmail.com', 'username': 'hwang', 'password': 'test1@', 'password2': 'test1@'},
             format='json')
         self.assertEqual(response.status_code, 400)
 
@@ -150,14 +152,16 @@ class TestAccount(TestCase):
             format='json')
         response = self.client.post('/account/login/', {'email': 'test@gmail.com', 'password': 'testtest1@'})
         self.assertEqual(response.status_code, 200)
-        token = response.data['refresh']
+        refresh_token = response.data['refresh']
+        access_token = response.data['access']
 
         # 로그아웃 요청
-        response = self.client.post('/account/logout/', {'refresh': token})
+        response = self.client.post('/account/logout/', {'refresh': refresh_token}, HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        print(response)
         self.assertEqual(response.status_code, 205)
 
         # 로그아웃 후 토큰 사용 시도
-        response = self.client.post('/account/logout/', HTTP_AUTHORIZATION=f'Bearer {token}')
+        response = self.client.post('/account/logout/', {'refresh': refresh_token})
         self.assertEqual(response.status_code, 401)
         print('-- 로그아웃 테스트 END --')
 
@@ -237,7 +241,7 @@ class TestAccount(TestCase):
         response = self.client.put(
             '/account/user/1/', 
             data={'email': 'test1@gmail.com', 'username': 'test1'}, 
-            format='multipart', 
+            format='json', 
             HTTP_AUTHORIZATION=f'Bearer {access_token}')
         user = User.objects.get(pk=1)
         username = user.username

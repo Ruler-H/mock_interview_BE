@@ -82,6 +82,8 @@
 |\<int:pk\>/|GET|프로필 조회|✅||
 |\<int:pk\>/|PUT|프로필 수정|✅|✅|
 |\<int:pk\>/|DELETE|회원 탈퇴|✅|✅|
+|status/|GET|로그인 상태 확인|||
+|token/refresh/|POST|만료 토큰 재발급|||
 <br>  
 
 |app:interview|HTTP Method|설명|로그인 권한 필요|작성자 권한 필요|
