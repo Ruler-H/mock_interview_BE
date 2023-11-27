@@ -32,6 +32,7 @@ class TestChatbot(TestCase):
             data={'client':1},
             HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
             format='json')
+        print(response.json())
         self.assertEqual(response.status_code, 201)
 
         self.assertEqual(ChatRoom.objects.get(pk=1).client.username, 'test')

@@ -19,11 +19,20 @@ class ChatCreateView(CreateAPIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
 
-
 class ChatListView(ListAPIView):
     serializer_class = ChatRoomSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, OnlyOwer]
+
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        for data in response.data:
+            if ChatMessage.objects.filter(chat_room__id=data['id']):
+                data['message'] = ChatMessage.objects.filter(chat_room__id=data['id'])[-1]
+            else:
+                data['message'] = ''
+        print(response.data)
+        return response
 
     def get_queryset(self):
         return ChatRoom.objects.filter(client=self.request.user)
