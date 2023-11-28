@@ -193,3 +193,50 @@ class TestInterview(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(Favorite.objects.all().count(), 4)
         print('-- 즐겨찾기 목록 기능 테스트 END --')
+
+    def test_interview_request_limit(self):
+        '''
+        면접 기능 사용 횟수 제한 테스트
+        '''
+        print('-- 면접 기능 사용 횟수 제한 테스트 BEGIN --')
+        self.client.post(
+            '/interview/field_question/',
+            data={
+                'field':'BE',
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        self.client.post(
+            '/interview/question/',
+            data={'career':'junior', 'field':'backend'},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}'
+        )
+        self.client.post(
+            '/interview/field_question/',
+            data={
+                'field':'BE',
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        self.client.post(
+            '/interview/question/',
+            data={'career':'junior', 'field':'backend'},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}'
+        )
+        self.client.post(
+            '/interview/field_question/',
+            data={
+                'field':'BE',
+            },
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json'
+        )
+        response = self.client.post(
+            '/interview/question/',
+            data={'career':'junior', 'field':'backend'},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}'
+        )
+        self.assertEqual(response.status_code, 429)
+        print('-- 면접 기능 사용 횟수 제한 테스트 END --')

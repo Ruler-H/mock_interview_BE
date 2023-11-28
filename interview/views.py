@@ -3,15 +3,17 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.decorators import api_view, permission_classes, authentication_classes
+from rest_framework.decorators import api_view, permission_classes, authentication_classes, throttle_classes
 
 from .models import Favorite
 from .serializers import FavoriteSerializer
+from .throttles import UserRateThrottle
 from .utils import generate_score, generate_question, generate_total_score
 
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+@throttle_classes([UserRateThrottle])
 def question(request):
     '''
     모의 면접을 위한 문제 요청(POST) view 함수
@@ -105,9 +107,10 @@ class FavoriteViewSet(ModelViewSet):
 @api_view(['POST'])
 @authentication_classes([JWTAuthentication])
 @permission_classes([IsAuthenticated])
+@throttle_classes([UserRateThrottle])
 def field_question(request):
     '''
-    모의 면접을 위한 문제 요청(POST) view 함수
+    분야별 문제 요청(POST) view 함수
     '''
     field = request.data['field']
     data = f'system: assistant는 {field} 기술 면접 전문가이다.'
