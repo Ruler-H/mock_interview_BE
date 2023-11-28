@@ -28,8 +28,8 @@ def generate_question(data, cnt):
         for line in response.text.strip().split('\n'):
             if 'question' in line:
                 question['question'] = line.split(':')[-1].replace(',', '').replace('"', '')
-            elif 'answer' in line:
-                question['answer'] = line.split(':')[-1].replace(',', '').replace('"', '')
+            elif 'perfectAnswer' in line:
+                question['perfectAnswer'] = line.split(':')[-1].replace(',', '').replace('"', '')
             elif 'intent' in line:
                 question['intent'] = line.split(':')[-1].replace(',', '').replace('"', '')
             elif 'difficulty' in line:

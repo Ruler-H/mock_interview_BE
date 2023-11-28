@@ -8,6 +8,7 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from .utils import generate_text
 from .permissions import OnlyOwer
+from .throttles import UserRateThrottle
 from .models import ChatRoom, ChatMessage
 from .serializers import ChatRoomSerializer, ChatMessageSerializer
 
@@ -28,10 +29,9 @@ class ChatListView(ListAPIView):
         response = super().list(request, *args, **kwargs)
         for data in response.data:
             if ChatMessage.objects.filter(chat_room__id=data['id']):
-                data['message'] = ChatMessage.objects.filter(chat_room__id=data['id'])[-1]
+                data['message'] = ChatMessage.objects.filter(chat_room__id=data['id']).last().content[:13] + '...'
             else:
                 data['message'] = ''
-        print(response.data)
         return response
 
     def get_queryset(self):
@@ -45,6 +45,7 @@ class ChatAnswerView(APIView):
     serializer_class = ChatMessageSerializer
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, OnlyOwer]
+    throttle_classes = [UserRateThrottle]
 
     def post(self, request):
         '''

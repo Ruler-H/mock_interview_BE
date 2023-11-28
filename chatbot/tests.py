@@ -139,3 +139,59 @@ class TestChatbot(TestCase):
         self.assertEqual(response.status_code, 204)
         self.assertEqual(ChatRoom.objects.all().count(), 0)
         print('-- 채팅방 delete 테스트 END --')
+
+    def test_chatbot_request_limit(self):
+        '''
+        챗봇 요청 제한 테스트
+        '''
+        print('-- 챗봇 요청 제한 테스트 BEGIN --')
+        # 정상 처리
+        self.client.post(
+            '/chatbot/', 
+            data={'client':1},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        response = self.client.post(
+            '/chatbot/answer/', 
+            data={
+                'room_pk': 1, 
+                'question': '백엔드 기술 면접 예상 질문 알려줘',},
+            HTTP_AUTHORIZATION=f'Bearer {self.access_token}',
+            format='json')
+        self.assertEqual(response.status_code, 429)
+        print('-- 챗봇 요청 제한 테스트 END --')
