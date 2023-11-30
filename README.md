@@ -79,53 +79,29 @@ PW : test123!@#
 - [와이어프레임 테스트 페이지](https://ovenapp.io/view/C3LmQ9sGvyqM28Cg9ZejPeTYKSOK1O5K/5IAOQ)  
 <img src="./static/assets/images/mockup_qr.png" width="10%"> 
 
-<div style="display:flex; justify-content:space-between;">
+<div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
     <img src="./static/assets/images/mockup/main_nonmember.png" width="23%">
     <img src="./static/assets/images/mockup/login.png" width="23%">
     <img src="./static/assets/images/mockup/signup.png" width="23%">
     <img src="./static/assets/images/mockup/main_member.png" width="23%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="23%">메인 페이지 로그인 전</div></p>
-    <p align="center"><div width="23%">로그인 페이지</div></p>
-    <p align="center"><div width="23%">회원가입 페이지</div></p>
-    <p align="center"><div width="23%">메인 페이지 로그인 후</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/mockup/after_click_career.png" width="23%">
     <img src="./static/assets/images/mockup/after_click_part.png" width="23%">
     <img src="./static/assets/images/mockup/mock_interview.png" width="23%">
     <img src="./static/assets/images/mockup/after_submit_answer.png" width="23%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="23%">모의 면접 페이지 1</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 2</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 3</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 4</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/mockup/after_click_to_star.png" width="23%">
     <img src="./static/assets/images/mockup/last_question.png" width="23%">
     <img src="./static/assets/images/mockup/after_submit_answer_for_last_question.png" width="23%">
     <img src="./static/assets/images/mockup/mock_Interview_result.png" width="23%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="23%">모의 면접 페이지 5</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 6</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 7</div></p>
-    <p align="center"><div width="23%">모의 면접 페이지 8</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/mockup/tech_chatbot.png" width="23%">
     <img src="./static/assets/images/mockup/cheat_sheet_1.png" width="23%">
     <img src="./static/assets/images/mockup/cheat_sheet_2.png" width="23%">
     <img src="./static/assets/images/mockup/only_for_me.png" width="23%">
-</div>
-<div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="23%">Tech Chatbot 페이지</div></p>
-    <p align="center"><div width="23%">치트 시트 페이지 1</div></p>
-    <p align="center"><div width="23%">치트 시트 페이지 2</div></p>
-    <p align="center"><div width="23%">Only For Me 페이지</div></p>
 </div>
 
 ## 6. 데이터베이스 모델링(ER Diagram)
@@ -231,55 +207,30 @@ PW : test123!@#
 ```
 
 ## 9. UI
-<div style="display:flex; justify-content:space-between;">
+<div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
     <img src="./static/assets/images/ui/interview1.png" width="30%">
     <img src="./static/assets/images/ui/interview2.png" width="30%">
     <img src="./static/assets/images/ui/interview3.png" width="30%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="30%">모의 면접 1</div></p>
-    <p align="center"><div width="30%">모의 면접 2</div></p>
-    <p align="center"><div width="30%">모의 면접 3</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/ui/interview4.png" width="30%">
     <img src="./static/assets/images/ui/interview5.png" width="30%">
     <img src="./static/assets/images/ui/interview6.png" width="30%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="30%">모의 면접 4</div></p>
-    <p align="center"><div width="30%">모의 면접 5</div></p>
-    <p align="center"><div width="30%">모의 면접 6</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/ui/interview7.png" width="30%">
     <img src="./static/assets/images/ui/chatbot1.png" width="30%">
     <img src="./static/assets/images/ui/chatbot2.png" width="30%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="30%">모의 면접 7</div></p>
-    <p align="center"><div width="30%">챗봇 1</div></p>
-    <p align="center"><div width="30%">챗봇 2</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/ui/cheatsheet.png" width="30%">
     <img src="./static/assets/images/ui/onlyforme.png" width="30%">
     <img src="./static/assets/images/ui/login.png" width="30%">
 </div>
 <div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="30%">치트시트</div></p>
-    <p align="center"><div width="30%">only for me</div></p>
-    <p align="center"><div width="30%">로그인</div></p>
-</div>
-<div style="display:flex; justify-content:space-between;">
     <img src="./static/assets/images/ui/register.png" width="30%">
     <img src="./static/assets/images/ui/profile.png" width="30%">
     <img src="./static/assets/images/ui/profile_edit.png" width="30%">
-</div>
-<div style="display:flex; justify-content:space-between; margin-bottom:1rem;">
-    <p align="center"><div width="30%">회원가입</div></p>
-    <p align="center"><div width="30%">프로필</div></p>
-    <p align="center"><div width="30%">프로필 수정</div></p>
 </div>
 
 ## 10. 메인 기능
