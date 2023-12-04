@@ -59,10 +59,10 @@
 ## 3. 배포 URL 및 아키텍쳐
 ### 3-1. 배포 URL
 #### [Django(API) 서버]  
-https://mockinterview.shop/  
+https://mockinterview.shop/ (배포 서버 중단)  
 
 #### [클라이언트(FrontEnd) 서버]  
-http://mockinterview-bucket.s3-website.ap-northeast-2.amazonaws.com/
+http://mockinterview-bucket.s3-website.ap-northeast-2.amazonaws.com/ (배포 서버 중단)
 ```
 배포 테스트 계정
 ID : test@test.com
